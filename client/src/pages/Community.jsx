@@ -30,7 +30,7 @@ const Community = () => {
             />
             <div
               className="absolute bottom-0 top-0 right-0 left-3 flex gap-2 items-end justify-end group-hover:justify-between p-3 group-hover:bg-gradient-to-b from-transparent to-black/80 text-white
-rounded-1g"
+            rounded-1g"
             >
               <p className="text-sm hidden group-hover:block">
                 {creation.prompt}
@@ -38,8 +38,7 @@ rounded-1g"
               <div className="flex gap-1 items-center">
                 <p>{creation.likes.length}</p>
                 <Heart
-                  className={`min-w-5 h-5 hover:scale-110 cursor-pointer $
-{creation.likes.includes (user.id) ? 'fill-red-500 text-red-600' :'text-white'}`}
+                  className={`min-w-5 h-5 hover:scale-110 cursor-pointer ${creation.likes.includes (user.id) ? 'fill-red-500 text-red-600' :'text-white'}`}
                 />
               </div>
             </div>
