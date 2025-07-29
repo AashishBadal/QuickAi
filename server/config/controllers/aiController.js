@@ -3,7 +3,7 @@ import sql from "../db.js";
 import { clerkClient } from "@clerk/express";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
-import FormData from 'form-data';
+import FormData from "form-data";
 
 const AI = new OpenAI({
   apiKey: process.env.GEMINI_API_KEY,
@@ -114,8 +114,8 @@ export const generateImage = async (req, res) => {
     }
 
     const formData = new FormData();
-    formData.append('prompt', prompt);
-    
+    formData.append("prompt", prompt);
+
     // Add any additional required parameters
     // formData.append('width', 512);
     // formData.append('height', 512);
@@ -124,30 +124,107 @@ export const generateImage = async (req, res) => {
       "https://clipdrop-api.co/text-to-image/v1",
       formData,
       {
-        headers: { 
-          'x-api-key': process.env.CLIPDROP_API_KEY,
-          'Content-Type': 'multipart/form-data',
-          ...formData.getHeaders() // This helps axios properly format FormData
+        headers: {
+          "x-api-key": process.env.CLIPDROP_API_KEY,
+          "Content-Type": "multipart/form-data",
+          ...formData.getHeaders(), // This helps axios properly format FormData
         },
         responseType: "arraybuffer",
       }
     );
 
-    const base64Image = `data:image/png;base64,${Buffer.from(data, "binary").toString("base64")}`;
+    const base64Image = `data:image/png;base64,${Buffer.from(
+      data,
+      "binary"
+    ).toString("base64")}`;
 
     const { secure_url } = await cloudinary.uploader.upload(base64Image);
 
     await sql`INSERT INTO creations (user_id, prompt, content, type, publish)
-      VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${publish ?? false})`;
+      VALUES (${userId}, ${prompt}, ${secure_url}, 'image', ${
+      publish ?? false
+    })`;
 
     res.json({ success: true, content: secure_url });
   } catch (error) {
-    console.error('Error generating image:', error);
+    console.error("Error generating image:", error);
     // More detailed error response
     res.status(error.response?.status || 500).json({
       success: false,
       message: error.response?.data?.message || error.message,
-      status: error.response?.status
+      status: error.response?.status,
+    });
+  }
+};
+
+export const removeImageBackground = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { image } = req.file;
+    const plan = req.plan;
+
+    if (plan !== "premium") {
+      return res.json({
+        success: false,
+        message: "This feature is only available for premium users",
+      });
+    }
+
+    const { secure_url } = await cloudinary.uploader.upload(image.path, {
+      transformation: [
+        {
+          effect: "background_removal",
+          background_removal: "remove the background",
+        },
+      ],
+    });
+
+    await sql`INSERT INTO creations (user_id, prompt, content, type)
+      VALUES (${userId}, 'remove background from inage', ${secure_url}, 'image')`;
+
+    res.json({ success: true, content: secure_url });
+  } catch (error) {
+    console.error("Error generating image:", error);
+    // More detailed error response
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: error.response?.data?.message || error.message,
+      status: error.response?.status,
+    });
+  }
+};
+
+export const removeImageObject = async (req, res) => {
+  try {
+    const { userId } = req.auth();
+    const { object } = req.body
+    const { image } = req.file;
+    const plan = req.plan;
+
+    if (plan !== "premium") {
+      return res.json({
+        success: false,
+        message: "This feature is only available for premium users",
+      });
+    }
+
+    const { public_id } = await cloudinary.uploader.upload(image.path);
+
+    const imageUrl = cloudinary.url(public_id,{
+      transformation:[{effect:`gen_remove:${object}`}],
+      resource_type:image
+    })
+
+    await sql`INSERT INTO creations (user_id, prompt, content, type)
+      VALUES (${userId}, ${`Removed ${object} from image`}, ${imageUrl}, 'image')`;
+
+    res.json({ success: true, content: imageUrl });
+  } catch (error) {
+    console.error("Error generating image:", error);
+    res.status(error.response?.status || 500).json({
+      success: false,
+      message: error.response?.data?.message || error.message,
+      status: error.response?.status,
     });
   }
 };
