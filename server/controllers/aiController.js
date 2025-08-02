@@ -199,8 +199,8 @@ export const removeImageBackground = async (req, res) => {
 export const removeImageObject = async (req, res) => {
   try {
     const { userId } = req.auth();
-    const { object } = req.body
-    const { image } = req.file;
+    const { object } = req.body;
+    const image = req.file;
     const plan = req.plan;
 
     if (plan !== "premium") {
@@ -210,23 +210,34 @@ export const removeImageObject = async (req, res) => {
       });
     }
 
-    const { public_id } = await cloudinary.uploader.upload(image.path);
+    if (!image) {
+      return res.status(400).json({
+        success: false,
+        message: "No image file provided"
+      });
+    }
 
-    const imageUrl = cloudinary.url(public_id,{
-      transformation:[{effect:`gen_remove:${object}`}],
-      resource_type:image
-    })
+    // Upload to Cloudinary
+    const uploadResult = await cloudinary.uploader.upload(image.path);
+    
+    // Generate transformed URL
+    const imageUrl = cloudinary.url(uploadResult.public_id, {
+      transformation: [{ effect: `gen_remove:${object}` }]
+    });
 
+    // Save to database
     await sql`INSERT INTO creations (user_id, prompt, content, type)
       VALUES (${userId}, ${`Removed ${object} from image`}, ${imageUrl}, 'image')`;
 
-    res.json({ success: true, content: imageUrl });
+    res.json({ 
+      success: true, 
+      content: imageUrl 
+    });
   } catch (error) {
-    console.error("Error generating image:", error);
-    res.status(error.response?.status || 500).json({
+    console.error("Error in removeImageObject:", error);
+    res.status(500).json({
       success: false,
-      message: error.response?.data?.message || error.message,
-      status: error.response?.status,
+      message: error.message
     });
   }
 };

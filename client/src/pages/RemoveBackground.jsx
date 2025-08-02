@@ -78,9 +78,9 @@ const RemoveBackground = () => {
             <p>Upload an image and click "Remove Background" to get started</p>
           </div>
         </div>):(
-          <div>
+        
             <img src={content} alt="Image" className="h-full w-full mt-3"/>
-          </div>
+          
         )
         }
       </div>
