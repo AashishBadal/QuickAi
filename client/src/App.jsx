@@ -23,8 +23,20 @@ const App = () => {
     getToken().then((token)=>{console.log(token)})
   },[])
   return (
-    <div>
-      <Toaster/>
+    <div className="min-h-screen text-hi">
+      <div className="app-bg" />
+      <div className="grain" />
+      <Toaster
+        toastOptions={{
+          style: {
+            background: "rgba(255,255,255,0.95)",
+            color: "#0c1411",
+            border: "1px solid rgba(12,20,17,0.1)",
+            backdropFilter: "blur(12px)",
+            boxShadow: "0 12px 30px -16px rgba(12,20,17,0.3)",
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ai" element={<Layout />}>

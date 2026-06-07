@@ -4,8 +4,19 @@ import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import axios from "axios";
 import Markdown from "react-markdown";
+import {
+  ToolLayout,
+  Panel,
+  PanelHeader,
+  FieldLabel,
+  SubmitButton,
+  EmptyState,
+} from "../components/ToolUI";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
+const fileInput =
+  "w-full text-sm text-mid glass rounded-xl px-3.5 py-2.5 mt-2 cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-primary/15 file:text-primary file:text-sm file:cursor-pointer";
 
 const ReviewResume = () => {
   const [input, setInput] = useState("");
@@ -17,10 +28,8 @@ const ReviewResume = () => {
     e.preventDefault();
     try {
       setLoading(true);
-
       const formData = new FormData();
       formData.append("resume", input);
-
       const { data } = await axios.post("/api/ai/resume-review", formData, {
         headers: { Authorization: `Bearer ${await getToken()}` },
       });
@@ -34,62 +43,44 @@ const ReviewResume = () => {
     }
     setLoading(false);
   };
+
   return (
-    <div className="h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700">
-      {/* left col */}
-      <form
-        onSubmit={onSubmitHandler}
-        className="w-full max-w-lg p-4 bg-white rounded-1g border border-gray-200"
-      >
-        <div className="flex items-center gap-3">
-          <Sparkles className="w-6 text-[#00da83]" />
-          <h1 className="text-xl font-semibold">Resume Review</h1>
-        </div>
-        <p className="mt-6 text-sm. font-medium">Upload Resume</p>
-        <input
-          onChange={(e) => setInput(e.target.files[0])}
-          type="file"
-          accept="application/psf"
-          className="w-full p-2 px-3 mt-2 outline-none text-sm rounded-md border border-gray-300 text-gray-600"
-          required
-        />
-        <p className="text-xs text-gray-500 font-light mt-1">
-          Supports PDF Resume Only
-        </p>
-        <button
-          disabled={loading}
-          className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#00da83] to-[#009bb3] text-white px-4 py-2 mt-6 text-sm rounded-lg cursor-pointer"
-        >
-          {loading ? (
-            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
-          ) : (
-            <FileText className="w-5" />
-          )}
-          Review Resume
-        </button>
-      </form>
-      {/* Right col */}
-      <div className="w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96 max-h-[600px]">
-        <div className="flex items-center gap-3">
-          <FileText className="w-5 h-5 text-[#00da83]" />
-          <h1 className="text-xl font-semibold">Analysis Result</h1>
-        </div>
+    <ToolLayout>
+      <Panel side="left">
+        <form onSubmit={onSubmitHandler}>
+          <PanelHeader Icon={Sparkles} title="Resume Review" accent="#00da83" />
+          <FieldLabel>Upload Resume</FieldLabel>
+          <input
+            onChange={(e) => setInput(e.target.files[0])}
+            type="file"
+            accept="application/pdf"
+            className={fileInput}
+            required
+          />
+          <p className="text-xs text-low mt-2">Supports PDF resumes only.</p>
+          <SubmitButton
+            loading={loading}
+            Icon={FileText}
+            gradient="linear-gradient(135deg, #00da83, #009bb3)"
+          >
+            Review Resume
+          </SubmitButton>
+        </form>
+      </Panel>
+
+      <Panel side="right" className="flex flex-col">
+        <PanelHeader Icon={FileText} title="Analysis Result" accent="#00da83" />
         {!content ? (
-          <div className="flex-1 flex justify-center items-center">
-            <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
-              <FileText className="w-9 h-9" />
-              <p>Upload a resume and click "Review Resume" to get started</p>
-            </div>
-          </div>
+          <EmptyState Icon={FileText}>
+            Upload a resume and click "Review Resume" to get started.
+          </EmptyState>
         ) : (
-          <div className="mt-3 h-full overflow-y-scroll text-sm text-slate-600">
-            <div className="reset-tw">
-              <Markdown>{content}</Markdown>
-            </div>
+          <div className="mt-4 h-full overflow-y-scroll md-body">
+            <Markdown>{content}</Markdown>
           </div>
         )}
-      </div>
-    </div>
+      </Panel>
+    </ToolLayout>
   );
 };
 

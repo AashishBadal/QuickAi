@@ -1,19 +1,199 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Outfit:wght@100..900&display=swap');
 
 @import "tailwindcss";
 
-*{
-  font-family: 'Outfit', sans-serif;
+@theme {
+  /* Brand / accent — fresh professional green */
+  --color-primary: #16a34a;
+  --color-primary-soft: #22c55e;
+  --color-accent: #15803d;
+  /* "fuchsia" token repurposed as the single danger / like accent (red) */
+  --color-fuchsia: #ef4444;
+
+  /* Surfaces — white + soft mint neutrals */
+  --color-canvas: #ffffff;
+  --color-ink: #f5f8f6;
+  --color-surface: #ffffff;
+  --color-elevated: #ffffff;
+
+  /* Text */
+  --color-hi: #0c1411;
+  --color-mid: #4b5563;
+  --color-low: #94a3a0;
+
+  /* Hairlines */
+  --color-line: rgba(12, 20, 17, 0.09);
+
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-sans: 'Outfit', sans-serif;
 }
 
-@theme{
-  --color-primary: #5044E5;
+* {
+  font-family: var(--font-sans);
 }
 
-.reset-tw, .reset-tw *{
-all:revert !important;
+html {
+  scroll-behavior: smooth;
 }
 
-.cl-drawerRoot{
-  z-index:10;
+body {
+  background-color: var(--color-canvas);
+  color: var(--color-hi);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+/* ---- Atmospheric background: soft green wash + faint grain ---- */
+.app-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background:
+    radial-gradient(55rem 55rem at 10% -10%, rgba(22, 163, 74, 0.1), transparent 60%),
+    radial-gradient(45rem 45rem at 100% 0%, rgba(34, 197, 94, 0.08), transparent 55%),
+    radial-gradient(40rem 40rem at 50% 120%, rgba(21, 128, 61, 0.06), transparent 60%),
+    var(--color-canvas);
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' /%3E%3C/svg%3E");
+}
+
+/* ---- Glass / card surfaces (light) ---- */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 1px 2px rgba(12, 20, 17, 0.04), 0 8px 24px -16px rgba(12, 20, 17, 0.18);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(12, 20, 17, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 4px 12px rgba(12, 20, 17, 0.06), 0 18px 40px -20px rgba(12, 20, 17, 0.22);
+}
+
+/* Card with a moving spotlight that follows the cursor */
+.spotlight {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(18rem 18rem at var(--mx, 50%) var(--my, 0%), rgba(22, 163, 74, 0.1), transparent 50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* ---- Gradient text ---- */
+.text-gradient {
+  background: linear-gradient(110deg, #15803d 10%, #16a34a 45%, #22c55e 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Glowing pill / button ---- */
+.btn-glow {
+  position: relative;
+  background: linear-gradient(180deg, var(--color-primary-soft), var(--color-primary));
+  box-shadow: 0 8px 22px -10px rgba(22, 163, 74, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.btn-glow:hover {
+  box-shadow: 0 12px 30px -8px rgba(22, 163, 74, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+
+/* Gradient ring border helper */
+.ring-gradient {
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(130deg, rgba(22, 163, 74, 0.45), rgba(34, 197, 94, 0.25), rgba(21, 128, 61, 0.4)) border-box;
+  border: 1px solid transparent;
+  box-shadow: 0 18px 50px -28px rgba(22, 163, 74, 0.4);
+}
+
+/* ---- Marquee ---- */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 38s linear infinite;
+}
+.marquee-mask:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.94); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ---- Custom scrollbars (light) ---- */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(22, 163, 74, 0.4) transparent;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb {
+  background: rgba(22, 163, 74, 0.3);
+  border-radius: 99px;
+}
+*::-webkit-scrollbar-thumb:hover { background: rgba(22, 163, 74, 0.5); }
+
+/* ---- Markdown output ---- */
+.md-body { color: var(--color-mid); font-size: 0.875rem; line-height: 1.7; }
+.md-body h1, .md-body h2, .md-body h3 { color: var(--color-hi); font-weight: 600; margin: 1em 0 0.5em; }
+.md-body h1 { font-size: 1.3rem; }
+.md-body h2 { font-size: 1.1rem; }
+.md-body h3 { font-size: 1rem; }
+.md-body p { margin: 0.6em 0; }
+.md-body strong { color: var(--color-hi); }
+.md-body ul, .md-body ol { padding-left: 1.2em; margin: 0.5em 0; }
+.md-body li { margin: 0.3em 0; }
+.md-body ul { list-style: disc; }
+.md-body ol { list-style: decimal; }
+.md-body code {
+  background: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+  padding: 0.1em 0.4em;
+  border-radius: 6px;
+  font-size: 0.85em;
+}
+.md-body a { color: var(--color-primary); }
+.md-body hr { border-color: var(--color-line); margin: 1em 0; }
+
+.cl-drawerRoot { z-index: 50; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

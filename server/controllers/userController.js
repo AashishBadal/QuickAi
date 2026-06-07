@@ -4,7 +4,7 @@ export const getUserCreations =async(req,res)=>{
     try {
         const {userId} = req.auth()
 
-        const creations = await sql`SELECT * FROM creations WHERE user_id = ${userId} ORDER BY freated_at DESC`
+        const creations = await sql`SELECT * FROM creations WHERE user_id = ${userId} ORDER BY created_at DESC`
         res.json({success:true,creations})
     } catch (error) {
         res.json({success:false,message:error.message})
@@ -48,11 +48,57 @@ export const toggleLikeCreation =async(req,res)=>{
 export const getPublishedCreations =async(req,res)=>{
     try {
 
-        const creations = await sql`SELECT * FROM creations WHERE publish =true ORDER BY freated_at DESC`
+        const creations = await sql`SELECT * FROM creations WHERE publish =true ORDER BY created_at DESC`
         res.json({success:true,creations})
     } catch (error) {
         res.json({success:false,message:error.message})
     }
 }
+
+export const deleteCreation = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { id } = req.body;
+
+        const [creation] = await sql`SELECT * FROM creations WHERE id = ${id}`;
+
+        if (!creation) {
+            return res.json({ success: false, message: "Creation not found" });
+        }
+
+        if (creation.user_id !== userId) {
+            return res.json({ success: false, message: "Unauthorized to delete this creation" });
+        }
+
+        await sql`DELETE FROM creations WHERE id = ${id}`;
+        res.json({ success: true, message: "Creation deleted successfully" });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
+export const deleteCreations = async (req, res) => {
+    try {
+        const { userId } = req.auth();
+        const { ids } = req.body;
+
+        if (!Array.isArray(ids) || ids.length === 0) {
+            return res.json({ success: false, message: "No creations selected" });
+        }
+
+        // Only the owner's creations are deleted; ids belonging to others are ignored.
+        const deleted = await sql`DELETE FROM creations WHERE id = ANY(${ids}::int[]) AND user_id = ${userId} RETURNING id`;
+
+        const count = deleted.length;
+        res.json({
+            success: true,
+            deletedCount: count,
+            message: `${count} creation${count === 1 ? "" : "s"} deleted successfully`,
+        });
+    } catch (error) {
+        res.json({ success: false, message: error.message });
+    }
+};
+
 
 

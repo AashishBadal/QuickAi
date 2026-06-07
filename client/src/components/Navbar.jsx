@@ -1,28 +1,53 @@
-import { assets } from '../assets/assets'
-import { useNavigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
-import { useClerk,UserButton,useUser } from '@clerk/clerk-react';
+import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
+import { motion } from "framer-motion";
+import { useMagnetic } from "../hooks/useTilt";
+import Logo from "./Logo";
 
 const Navbar = () => {
-  const navigate = useNavigate();
   const { user } = useUser();
   const { openSignIn } = useClerk();
+  const [scrolled, setScrolled] = useState(false);
+  const magnet = useMagnetic(0.4);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <div className='fixed z-5 w-full backdrop-blur-2xl flex justify-between items-center py-3 px-4 sm:px-20 xl:px-32'>
-      <img onClick={() => navigate('/')} src={assets.logo} alt="logo" className='w-32 sm:w-44 cursor-pointer'/>
+    <motion.div
+      initial={{ y: -80, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+      className={`fixed z-40 w-full flex justify-between items-center px-4 sm:px-20 xl:px-32 transition-all duration-300 ${
+        scrolled
+          ? "py-3 bg-canvas/80 backdrop-blur-xl border-b border-line"
+          : "py-5 bg-transparent border-b border-transparent"
+      }`}
+    >
+      <Logo />
 
-      {
-        user ? (
-            <UserButton />
+      {user ? (
+        <div className="scale-110">
+          <UserButton />
+        </div>
+      ) : (
+        <motion.button
+          style={magnet.style}
+          onMouseMove={magnet.onMouseMove}
+          onMouseLeave={magnet.onMouseLeave}
+          onClick={openSignIn}
+          className="btn-glow group flex items-center gap-2 rounded-full text-sm font-medium cursor-pointer text-white px-6 sm:px-7 py-2.5"
+        >
+          Get Started
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </motion.button>
+      )}
+    </motion.div>
+  );
+};
 
-        ) : (
-        <button onClick={openSignIn} className='flex items-center gap-2 rounded-full text-sm cursor-pointer bg-primary text-white px-10 py-2.5' >Get Started <ArrowRight className='h-4 w-4' /></button>
-        )
-      }
-
-      
-    </div>
-  )
-}
-
-export default Navbar
+export default Navbar;

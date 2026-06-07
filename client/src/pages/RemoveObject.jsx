@@ -3,15 +3,26 @@ import React, { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import {
+  ToolLayout,
+  Panel,
+  PanelHeader,
+  FieldLabel,
+  SubmitButton,
+  EmptyState,
+  inputClass,
+} from "../components/ToolUI";
 
 axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
+
+const fileInput =
+  "w-full text-sm text-mid glass rounded-xl px-3.5 py-2.5 mt-2 cursor-pointer file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-primary/15 file:text-primary file:text-sm file:cursor-pointer";
 
 const RemoveObject = () => {
   const [input, setInput] = useState("");
   const [object, setObject] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
-
   const { getToken } = useAuth();
 
   const onSubmitHandler = async (e) => {
@@ -19,6 +30,7 @@ const RemoveObject = () => {
     try {
       setLoading(true);
       if (object.split(" ").length > 1) {
+        setLoading(false);
         return toast("Please enter only one object name");
       }
       const formData = new FormData();
@@ -41,68 +53,50 @@ const RemoveObject = () => {
   };
 
   return (
-    <div className="h-full overflow-y-scroll p-6 flex items-start flex-wrap gap-4 text-slate-700">
-      {/* left col */}
-      <form
-        onSubmit={onSubmitHandler}
-        className="w-full max-w-lg p-4 bg-white rounded-1g border border-gray-200"
-      >
-        <div className="flex items-center gap-3">
-          <Sparkles className="w-6 text-[#4a7aff]" />
-          <h1 className="text-xl font-semibold">Object Remover</h1>
-        </div>
-        <p className="mt-6 text-sm. font-medium">Upload Image</p>
-        <input
-          onChange={(e) => setInput(e.target.files[0])}
-          type="file"
-          accept="image/*"
-          className="w-full p-2 px-3 mt-2 outline-none text-sm rounded-md border border-gray-300 text-gray-600"
-          required
-        />
+    <ToolLayout>
+      <Panel side="left">
+        <form onSubmit={onSubmitHandler}>
+          <PanelHeader Icon={Sparkles} title="Object Remover" accent="#4a7aff" />
+          <FieldLabel>Upload Image</FieldLabel>
+          <input
+            onChange={(e) => setInput(e.target.files[0])}
+            type="file"
+            accept="image/*"
+            className={fileInput}
+            required
+          />
+          <FieldLabel>Describe object to remove</FieldLabel>
+          <textarea
+            onChange={(e) => setObject(e.target.value)}
+            value={object}
+            rows={4}
+            className={`${inputClass} resize-none`}
+            placeholder="e.g. watch or spoon — only a single object name"
+            required
+          />
+          <SubmitButton
+            loading={loading}
+            Icon={Scissors}
+            gradient="linear-gradient(135deg, #417DF6, #2563EB)"
+          >
+            Remove Object
+          </SubmitButton>
+        </form>
+      </Panel>
 
-        <p className="mt-6 text-sm. font-medium">
-          Describe Object name to remove
-        </p>
-
-        <textarea
-          onChange={(e) => setObject(e.target.value)}
-          value={object}
-          rows={4}
-          className="w-full p-2 px-3 mt-2 outline-none text-sm rounded-md border border-gray-300"
-          placeholder="e.g., watch or spoon, Only single object name"
-          required
-        />
-        <button
-          disabled={loading}
-          className="w-full flex justify-center items-center gap-2 bg-gradient-to-r from-[#417DF6] to-[#8E37EB] text-white px-4 py-2 mt-6 text-sm rounded-1g cursor-pointer"
-        >
-          {loading ? (
-            <span className="w-4 h-4 my-1 rounded-full border-2 border-t-transparent animate-spin"></span>
-          ) : (
-            <Scissors className="w-5" />
-          )}
-          Remove object
-        </button>
-      </form>
-      {/* Right col */}
-      <div className="w-full max-w-lg p-4 bg-white rounded-lg flex flex-col border border-gray-200 min-h-96">
-        <div className="flex items-center gap-3">
-          <Scissors className="w-5 h-5 text-[#4a7aff]" />
-          <h1 className="text-xl font-semibold">Processed Image</h1>
-        </div>
+      <Panel side="right" className="flex flex-col">
+        <PanelHeader Icon={Scissors} title="Processed Image" accent="#4a7aff" />
         {!content ? (
-          <div className="flex-1 flex justify-center items-center">
-            <div className="text-sm flex flex-col items-center gap-5 text-gray-400">
-              I
-              <Scissors className="w-9 h-9" />
-              <p>Upload an image and click "Remove object" to get started</p>
-            </div>
-          </div>
+          <EmptyState Icon={Scissors}>
+            Upload an image and click "Remove Object" to get started.
+          </EmptyState>
         ) : (
-          <img src={content} alt="Image" className="h-full w-full mt-3" />
+          <div className="mt-4 h-full">
+            <img src={content} alt="Processed" className="w-full rounded-xl" />
+          </div>
         )}
-      </div>
-    </div>
+      </Panel>
+    </ToolLayout>
   );
 };
 

@@ -1,63 +1,74 @@
-import { assets } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+import Reveal from "./Reveal";
+import Logo from "./Logo";
 
 export default function Footer() {
+  const navigate = useNavigate();
+
   return (
-    <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pt-8 w-full text-gray-500">
-      <div className="flex flex-col md:flex-row justify-between w-full gap-10 border-b border-gray-500/30 pb-6">
-        <div className="md:max-w-96">
-          <img
-            className="h-9"
-            src={assets.logo}
-            alt="dummyLogoDark"
-          />
-          <p className="mt-6 text-sm">
-            Experience the power of AI with QuickAi.<br/>Transform your content creation with our suite of premium AI tools. Write articles, generate images, and enhance your workflow.
+    <footer className="px-6 md:px-16 lg:px-24 xl:px-32 pb-10">
+      {/* Final CTA band */}
+      <Reveal className="max-w-6xl mx-auto mb-12" y={40}>
+        <div className="ring-gradient relative overflow-hidden rounded-3xl px-8 sm:px-14 py-14 text-center">
+          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/25 blur-[100px] rounded-full pointer-events-none" />
+          <h2 className="relative font-display text-3xl sm:text-5xl font-semibold text-hi">
+            Ready to create something <span className="text-gradient">amazing?</span>
+          </h2>
+          <p className="relative text-mid mt-4 max-w-md mx-auto">
+            Join thousands of creators building faster with QuickAI.
+          </p>
+          <button
+            onClick={() => navigate("/ai")}
+            className="relative btn-glow group mt-8 inline-flex items-center gap-2 text-white px-8 py-3.5 rounded-full text-sm font-medium cursor-pointer"
+          >
+            Get started for free
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </button>
+        </div>
+      </Reveal>
+
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between gap-10 border-t border-line pt-12 text-mid">
+        <div className="md:max-w-sm">
+          <Logo />
+          <p className="mt-5 text-sm leading-relaxed text-low">
+            Experience the power of AI with QuickAI. Write articles, generate images,
+            and supercharge your entire content workflow.
           </p>
         </div>
-        <div className="flex-1 flex items-start md:justify-end gap-20">
+        <div className="flex-1 flex items-start md:justify-end gap-16 sm:gap-24">
           <div>
-            <h2 className="font-semibold mb-5 text-gray-800">Company</h2>
-            <ul className="text-sm space-y-2">
-              <li>
-                <a href="#">Home</a>
-              </li>
-              <li>
-                <a href="#">About us</a>
-              </li>
-              <li>
-                <a href="#">Contact us</a>
-              </li>
-              <li>
-                <a href="#">Privacy policy</a>
-              </li>
+            <h2 className="font-medium mb-4 text-hi text-sm">Company</h2>
+            <ul className="text-sm space-y-2.5 text-low">
+              {["Home", "About us", "Contact us", "Privacy policy"].map((l) => (
+                <li key={l}>
+                  <a href="#" className="hover:text-hi transition-colors">
+                    {l}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
-            <h2 className="font-semibold text-gray-800 mb-5">
-              Subscribe to our newsletter
-            </h2>
-            <div className="text-sm space-y-2">
-              <p>
-                The latest news, articles, and resources, sent to your inbox
-                weekly.
-              </p>
-              <div className="flex items-center gap-2 pt-4">
-                <input
-                  className="border border-gray-500/30 placeholder-gray-500 focus:ring-2 ring-indigo-600 outline-none w-full max-w-64 h-9 rounded px-2"
-                  type="email"
-                  placeholder="Enter your email"
-                />
-                <button className="bg-primary cursor-pointer w-24 h-9 text-white rounded">
-                  Subscribe
-                </button>
-              </div>
+            <h2 className="font-medium mb-4 text-hi text-sm">Newsletter</h2>
+            <p className="text-sm text-low max-w-56">
+              The latest news and resources, sent to your inbox weekly.
+            </p>
+            <div className="flex items-center gap-2 pt-4">
+              <input
+                className="glass placeholder-low text-hi focus:border-primary/50 outline-none w-full max-w-48 h-10 rounded-lg px-3 text-sm transition-colors"
+                type="email"
+                placeholder="Enter your email"
+              />
+              <button className="btn-glow text-white w-24 h-10 rounded-lg text-sm cursor-pointer">
+                Subscribe
+              </button>
             </div>
           </div>
         </div>
       </div>
-      <p className="pt-4 text-center text-xs md:text-sm pb-5">
-        Copyright 2025 © <a href="https://prebuiltui.com">QuickAi</a>. All
-        Right Reserved.
+      <p className="max-w-6xl mx-auto pt-8 text-center text-xs text-low">
+        Copyright {new Date().getFullYear()} © QuickAI. All rights reserved.
       </p>
     </footer>
   );
