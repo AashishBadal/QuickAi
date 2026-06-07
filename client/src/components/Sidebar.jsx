@@ -63,32 +63,6 @@ const Sidebar = ({ sidebar, setSidebar }) => {
         />
       </button>
 
-      {/* profile (fixed) */}
-      <div className="side-item shrink-0 flex flex-col items-center pt-7 pb-6 border-b border-line mx-3">
-        <div className="relative">
-          <img
-            src={user?.imageUrl}
-            alt=""
-            className={`rounded-full ring-2 ring-primary/40 transition-all ${
-              collapsed ? "w-10 h-10" : "w-16 h-16"
-            }`}
-          />
-          <span className="absolute bottom-0.5 right-0.5 w-3 h-3 bg-primary rounded-full border-2 border-canvas" />
-        </div>
-        {!collapsed && (
-          <>
-            <h1 className="mt-3 text-sm font-medium text-hi truncate max-w-full px-2">
-              {user?.fullName}
-            </h1>
-            <p className="text-xs text-low">
-              <Protect plan="premium" fallback="Free plan">
-                Premium plan
-              </Protect>
-            </p>
-          </>
-        )}
-      </div>
-
       {/* nav (scrollable) */}
       <nav className="flex-1 min-h-0 overflow-y-auto px-3 py-4 space-y-1">
         {navItems.map((item) => (
