@@ -1,4 +1,4 @@
-# QuickAI
+# AI Zone
 
 > A full-stack AI SaaS platform for content creators — write articles, generate blog titles, create and edit images, and review resumes, all behind a polished, animated UI.
 
