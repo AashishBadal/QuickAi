@@ -16,7 +16,7 @@ export default function Footer() {
             Ready to create something <span className="text-gradient">amazing?</span>
           </h2>
           <p className="relative text-mid mt-4 max-w-md mx-auto">
-            Join thousands of creators building faster with QuickAI.
+            Join thousands of creators building faster with AI Zone.
           </p>
           <button
             onClick={() => navigate("/ai")}
@@ -32,7 +32,7 @@ export default function Footer() {
         <div className="md:max-w-sm">
           <Logo />
           <p className="mt-5 text-sm leading-relaxed text-low">
-            Experience the power of AI with QuickAI. Write articles, generate images,
+            Experience the power of AI with AI Zone. Write articles, generate images,
             and supercharge your entire content workflow.
           </p>
         </div>
@@ -68,7 +68,7 @@ export default function Footer() {
         </div>
       </div>
       <p className="max-w-6xl mx-auto pt-8 text-center text-xs text-low">
-        Copyright {new Date().getFullYear()} © QuickAI. All rights reserved.
+        Copyright {new Date().getFullYear()} © AI Zone. All rights reserved.
       </p>
     </footer>
   );

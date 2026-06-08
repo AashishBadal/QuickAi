@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, LayoutDashboard } from "lucide-react";
 import { useClerk, UserButton, useUser } from "@clerk/clerk-react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useMagnetic } from "../hooks/useTilt";
 import Logo from "./Logo";
 
 const Navbar = () => {
   const { user } = useUser();
   const { openSignIn } = useClerk();
+  const navigate = useNavigate();
   const [scrolled, setScrolled] = useState(false);
   const magnet = useMagnetic(0.4);
 
@@ -31,8 +33,20 @@ const Navbar = () => {
       <Logo />
 
       {user ? (
-        <div className="scale-110">
-          <UserButton />
+        <div className="flex items-center gap-3 sm:gap-4">
+          <motion.button
+            style={magnet.style}
+            onMouseMove={magnet.onMouseMove}
+            onMouseLeave={magnet.onMouseLeave}
+            onClick={() => navigate("/ai")}
+            className="btn-glow group flex items-center gap-2 rounded-full text-sm font-medium cursor-pointer text-white px-5 sm:px-6 py-2.5"
+          >
+            <LayoutDashboard className="h-4 w-4" />
+            Dashboard
+          </motion.button>
+          <div className="scale-110">
+            <UserButton />
+          </div>
         </div>
       ) : (
         <motion.button

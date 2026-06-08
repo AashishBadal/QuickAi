@@ -18,7 +18,7 @@ const Logo = ({ className = "", onClick }) => {
         </svg>
       </span>
       <span className="font-display text-lg font-semibold tracking-tight text-hi">
-        Quick<span className="text-gradient">AI</span>
+        AI{" "}<span className="text-gradient">Zone</span>
       </span>
     </button>
   );

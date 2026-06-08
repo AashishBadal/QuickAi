@@ -24,7 +24,10 @@ const clerkLight = {
 
 const Plan = () => {
   return (
-    <section className="py-16 px-4 sm:px-12 xl:px-24 max-w-6xl mx-auto">
+    <section
+      id="pricing"
+      className="py-16 px-4 sm:px-12 xl:px-24 max-w-6xl mx-auto scroll-mt-24"
+    >
       <Reveal
         className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14"
         selector=".rv"

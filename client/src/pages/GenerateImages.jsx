@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
+import { notifyApiError } from "../lib/notify";
 import {
   ToolLayout,
   Panel,
@@ -46,7 +47,7 @@ const GenerateImages = () => {
       if (data.success) {
         setContent(data.content);
       } else {
-        toast.error(data.message);
+        notifyApiError(data.message);
       }
     } catch (error) {
       toast.error(error.message);

@@ -158,8 +158,9 @@ const Dashboard = () => {
       </div>
 
       {loading ? (
-        <div className="flex justify-center items-center h-3/4">
+        <div className="flex flex-col justify-center items-center h-3/4">
           <span className="w-10 h-10 rounded-full border-[3px] border-primary border-t-transparent animate-spin" />
+          <p className="text-sm text-mid mt-3 text-center px-4 max-w-md">The backend is deployed on Render which shutsdown after 15 mins of inactivity so please wait for 2 mins for the first request</p>
         </div>
       ) : (
         <div className="mt-10">

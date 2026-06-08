@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { notifyApiError } from "../lib/notify";
 import {
   ToolLayout,
   Panel,
@@ -44,7 +45,7 @@ const RemoveObject = () => {
       if (data.success) {
         setContent(data.content);
       } else {
-        toast.error(data.message);
+        notifyApiError(data.message);
       }
     } catch (error) {
       toast.error(error.message);

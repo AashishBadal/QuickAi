@@ -134,12 +134,12 @@ const Hero = () => {
             Start creating
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </motion.button>
-          <button className="group flex items-center gap-2.5 px-6 py-3.5 rounded-full glass hover:glass-strong text-sm font-medium cursor-pointer transition-all text-hi">
+          {/* <button className="group flex items-center gap-2.5 px-6 py-3.5 rounded-full glass hover:glass-strong text-sm font-medium cursor-pointer transition-all text-hi">
             <span className="grid place-items-center w-7 h-7 rounded-full bg-primary/10 text-primary group-hover:bg-primary/15 transition-colors">
               <Play className="w-3 h-3 fill-current" />
             </span>
             Watch demo
-          </button>
+          </button> */}
         </motion.div>
 
         <motion.div
