@@ -1,8 +1,8 @@
-# QuickAI
+# AI Zone
 
 > A full-stack AI SaaS platform for content creators — write articles, generate blog titles, create and edit images, and review resumes, all behind a polished, animated UI.
 
-QuickAI bundles six AI tools into a single dashboard with authentication, usage-based free/premium plans, a community gallery, and a creation history. It's built on the **MERN-ish** stack (React + Express + PostgreSQL), with Clerk for auth & billing, Gemini for text, ClipDrop for images, and Cloudinary for media storage.
+AI Zone bundles six AI tools into a single dashboard with authentication, usage-based free/premium plans, a community gallery, and a creation history. It's built on the **MERN-ish** stack (React + Express + PostgreSQL), with Clerk for auth & billing, Gemini for text, ClipDrop for images, and Cloudinary for media storage.
 
 ---
 
@@ -33,10 +33,10 @@ Plus:
 
 ## 🏗️ Architecture
 
-QuickAI is a **monorepo** with two independent apps: a Vite/React `client` and an Express `server`, talking over a REST API.
+AI Zone is a **monorepo** with two independent apps: a Vite/React `client` and an Express `server`, talking over a REST API.
 
 ```
-QuickAi/
+AI Zone/
 ├── client/                 # React 19 + Vite frontend
 │   └── src/
 │       ├── components/     # Navbar, Hero, Sidebar, ToolUI, Reveal, etc.
@@ -125,8 +125,8 @@ You'll need free accounts / keys for:
 ### 1. Clone
 
 ```bash
-git clone <your-repo-url> QuickAi
-cd QuickAi
+git clone <your-repo-url> AI Zone
+cd AI Zone
 ```
 
 ### 2. Set up the database
